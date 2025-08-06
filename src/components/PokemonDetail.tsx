@@ -239,7 +239,7 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({
               </div>
               <span className="font-bold text-blue-300 block mb-1">Weight</span>
               <div className="bg-gray-900/60 rounded-lg px-4 py-2 text-gray-100 text-sm shadow-inner border border-gray-700">
-                {detail.weight}
+                {detail.weight} Kg
               </div>
               <div>
                 <span className="font-bold text-blue-300">Abilities</span>
