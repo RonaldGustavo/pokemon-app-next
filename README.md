@@ -27,6 +27,7 @@ Here is the UI of this Pokemon App Ronald:
 ![Pokemon App detail Page](https://github.com/RonaldGustavo/pokemon-app-next/blob/main/src/assets/images/detail.png)
 ![Pokemon App search Page](https://github.com/RonaldGustavo/pokemon-app-next/blob/main/src/assets/images/search.png)
 ![Pokemon App no data view](https://github.com/RonaldGustavo/pokemon-app-next/blob/main/src/assets/images/no_data.png)
-![Pokemon App loading view](https://github.com/RonaldGustavo/pokemon-app-next/blob/main/src/assets/images/loading_detail.png)
+![Pokemon App loading view](https://github.com/RonaldGustavo/pokemon-app-next/blob/main/src/assets/images/loading.png)
+![Pokemon App loading detail view](https://github.com/RonaldGustavo/pokemon-app-next/blob/main/src/assets/images/loading_detail.png)
 
 > You can also view the live site [here](https://pokemon-app-next-six.vercel.app/)
