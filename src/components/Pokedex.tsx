@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 import PokemonCard from '../components/PokemonCard';
 import PokemonDetail from '../components/PokemonDetail';
-import { getPokemons } from '@/services/pokemon.service';
+import { getPokemons, getAllPokemonNames } from '@/services/pokemon.service';
 
 interface Pokemon {
   name: string;
@@ -28,9 +28,8 @@ const Pokedex: React.FC = () => {
   React.useEffect(() => {
     async function fetchNames() {
       try {
-        const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=2000');
-        const data = await res.json();
-        setAllNames(data.results.map((p: { name: string }) => p.name));
+        const names = await getAllPokemonNames();
+        setAllNames(names);
       } catch {}
     }
     fetchNames();

@@ -1,13 +1,13 @@
-
 const BASE_URL = 'https://pokeapi.co'
 
-export async function getPokemonOfficialArtwork(name: string): Promise<string> {
-  const res = await fetch(`${BASE_URL}/api/v2/pokemon/${name}`);
-  if (!res.ok) return '';
-  const pokeData = await res.json();
-  return pokeData.sprites.other['official-artwork'].front_default || '';
+export async function getAllPokemonNames(): Promise<string[]> {
+  const res = await fetch(`${BASE_URL}/api/v2/pokemon?limit=2000`);
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.results.map((p: { name: string }) => p.name);
 }
-export async function getPokemons(limit = 20, offset = 0, search = '') {
+
+export async function getPokemons(limit = 10, offset = 0, search = '') {
   const url = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
   const res = await fetch(url);
   const data = await res.json();
@@ -45,4 +45,11 @@ export async function getPokemonDetail(nameOrId: string | number) {
     moves: pokeData.moves,
     species: pokeData.species,
   };
+}
+
+export async function getPokemonOfficialArtwork(name: string): Promise<string> {
+  const res = await fetch(`${BASE_URL}/api/v2/pokemon/${name}`);
+  if (!res.ok) return '';
+  const pokeData = await res.json();
+  return pokeData.sprites.other['official-artwork'].front_default || '';
 }
