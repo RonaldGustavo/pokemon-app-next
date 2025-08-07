@@ -1,6 +1,6 @@
 # 🌟 Welcome to My Pokemon App Ronald!
 
-A modern, responsive 3D-style Pokédex web app built with Next.js, Tailwind CSS, and TypeScript. Features server-side rendering, real-time Pokémon data from PokéAPI, search and filter functionality, and mobile-friendly design.
+A modern, responsive Pokédex web app built with Next.js, Tailwind CSS, and TypeScript. Features client-side rendering, real-time Pokémon data from PokéAPI, search and filter functionality, and mobile-friendly design.
 
 ## 🚀 Tech Stack Used
 
