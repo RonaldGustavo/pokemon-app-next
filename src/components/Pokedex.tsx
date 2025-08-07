@@ -21,6 +21,18 @@ const Pokedex: React.FC = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [allNames, setAllNames] = useState<string[]>([]);
+
+  React.useEffect(() => {
+    async function fetchNames() {
+      try {
+        const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=2000');
+        const data = await res.json();
+        setAllNames(data.results.map((p: { name: string }) => p.name));
+      } catch {}
+    }
+    fetchNames();
+  }, []);
 
   React.useEffect(() => {
     let isMounted = true;
@@ -28,9 +40,25 @@ const Pokedex: React.FC = () => {
       setLoading(true);
       setError('');
       try {
-        const offset = (page - 1) * pageSize;
-        const data = await getPokemons(pageSize, offset, search);
-        if (isMounted) setPokemons(data);
+        if (search) {
+          const matched = allNames.filter((n) => n.toLowerCase().includes(search.toLowerCase())).slice(0, pageSize);
+          const results: Pokemon[] = await Promise.all(
+            matched.map(async (name) => {
+              const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+              const pokeData = await res.json();
+              return {
+                name: pokeData.name,
+                image: pokeData.sprites.other['official-artwork'].front_default,
+                types: pokeData.types.map((t: { type: { name: string } }) => t.type.name),
+              };
+            })
+          );
+          if (isMounted) setPokemons(results);
+        } else {
+          const offset = (page - 1) * pageSize;
+          const data = await getPokemons(pageSize, offset);
+          if (isMounted) setPokemons(data);
+        }
       } catch (err) {
         if (isMounted) setError('Failed to load Pokémon data.');
       } finally {
@@ -39,7 +67,7 @@ const Pokedex: React.FC = () => {
     }
     fetchData();
     return () => { isMounted = false; };
-  }, [page, search]);
+  }, [page, search, allNames]);
 
   React.useEffect(() => { setPage(1); }, [search]);
 
