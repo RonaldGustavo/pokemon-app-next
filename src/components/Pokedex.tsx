@@ -7,11 +7,7 @@ import PokemonCard from '../components/PokemonCard';
 import PokemonDetail from '../components/PokemonDetail';
 import { getPokemons, getAllPokemonNames, getPokemonDetail } from '@/services/pokemon.service';
 
-interface Pokemon {
-  name: string;
-  image: string;
-  types: string[];
-}
+import type { Pokemon } from '@/services/pokemon.service';
 
 const Pokedex: React.FC = () => {
   const [search, setSearch] = useState('');

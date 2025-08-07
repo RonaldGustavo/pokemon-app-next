@@ -4,18 +4,17 @@ import TYPE_COLORS from '@/constants/type_colors';
 import React from 'react';
 
 
-export interface PokemonCardProps {
-  name: string;
-  image: string;
-  types: string[];
-}
+import type { Pokemon } from '@/services/pokemon.service';
+import Image from 'next/image';
 
-const PokemonCard: React.FC<PokemonCardProps> = ({ name, image, types }) => {
+const PokemonCard: React.FC<Pokemon> = ({ name, image, types }) => {
   return (
     <div className="bg-gray-800 rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300 p-4 flex flex-col items-center border border-gray-700 hover:border-blue-500 hover:shadow-blue-500/30">
-      <img
+      <Image
         src={image}
         alt={name}
+        width={96}
+        height={96}
         className="w-24 h-24 object-contain drop-shadow-lg mb-2"
         loading="lazy"
       />
