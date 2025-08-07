@@ -218,10 +218,13 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({
           `}</style>
           {loading ? (
             <div className="flex flex-col items-center justify-center py-8">
-              <img
+              <Image
                 src="/pokeball.svg"
                 alt="Loading Pokeball"
+                width={64}
+                height={64}
                 className="w-16 h-16 animate-spin-slow mb-2"
+                priority
               />
               <span className="text-gray-400 text-center text-base font-semibold">
                 Loading...
