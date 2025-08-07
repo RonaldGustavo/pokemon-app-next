@@ -7,11 +7,16 @@ export async function getPokemonOfficialArtwork(name: string): Promise<string> {
   const pokeData = await res.json();
   return pokeData.sprites.other['official-artwork'].front_default || '';
 }
-export async function getPokemons(limit = 100) {
-  const res = await fetch(`${BASE_URL}/api/v2/pokemon?limit=${limit}`);
+export async function getPokemons(limit = 20, offset = 0, search = '') {
+  const url = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
+  const res = await fetch(url);
   const data = await res.json();
+  let results = data.results;
+  if (search) {
+    results = results.filter((p: { name: string }) => p.name.toLowerCase().includes(search.toLowerCase()));
+  }
   const pokemons = await Promise.all(
-    data.results.map(async (pokemon: { name: string; url: string }) => {
+    results.map(async (pokemon: { name: string; url: string }) => {
       const pokeRes = await fetch(pokemon.url);
       const pokeData = await pokeRes.json();
       return {

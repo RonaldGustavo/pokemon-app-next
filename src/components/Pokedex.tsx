@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 import PokemonCard from '../components/PokemonCard';
 import PokemonDetail from '../components/PokemonDetail';
+import { getPokemons } from '@/services/pokemon.service';
 
 interface Pokemon {
   name: string;
@@ -12,17 +13,35 @@ interface Pokemon {
   types: string[];
 }
 
-interface PokedexProps {
-  pokemons: Pokemon[];
-}
-
-const Pokedex: React.FC<PokedexProps> = ({ pokemons }) => {
+const Pokedex: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<Pokemon | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 20;
+  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const filtered = pokemons.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
-  );
+  React.useEffect(() => {
+    let isMounted = true;
+    async function fetchData() {
+      setLoading(true);
+      setError('');
+      try {
+        const offset = (page - 1) * pageSize;
+        const data = await getPokemons(pageSize, offset, search);
+        if (isMounted) setPokemons(data);
+      } catch (err) {
+        if (isMounted) setError('Failed to load Pokémon data.');
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    fetchData();
+    return () => { isMounted = false; };
+  }, [page, search]);
+
+  React.useEffect(() => { setPage(1); }, [search]);
 
   return (
     <div className="py-8 px-4 max-w-7xl mx-auto bg-transparent">
@@ -52,13 +71,22 @@ const Pokedex: React.FC<PokedexProps> = ({ pokemons }) => {
         />
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 min-h-[120px]">
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="col-span-full flex flex-col items-center justify-center py-12">
+            <Image src="/pokeball.svg" alt="Loading" width={64} height={64} className="mb-4 animate-spin-slow opacity-60" />
+            <span className="text-gray-400 text-lg font-semibold">Loading Pokémon...</span>
+          </div>
+        ) : error ? (
+          <div className="col-span-full flex flex-col items-center justify-center py-12">
+            <span className="text-red-400 text-lg font-semibold">{error}</span>
+          </div>
+        ) : pokemons.length === 0 ? (
           <div className="col-span-full flex flex-col items-center justify-center py-12">
             <Image src="/pokeball.svg" alt="No Data" width={64} height={64} className="mb-4 opacity-60 animate-pulse" />
             <span className="text-gray-400 text-lg font-semibold">No Pokémon found.</span>
           </div>
         ) : (
-          filtered.map((pokemon) => (
+          pokemons.map((pokemon) => (
             <button
               key={pokemon.name}
               className="focus:outline-none"
@@ -68,6 +96,26 @@ const Pokedex: React.FC<PokedexProps> = ({ pokemons }) => {
             </button>
           ))
         )}
+      </div>
+      {/* Pagination UI */}
+      <div className="flex items-center justify-center gap-4 mt-8">
+        <button
+          className={`px-4 py-2 rounded-lg font-semibold border transition-all shadow ${page === 1 ? 'bg-gray-700 text-gray-400 border-gray-600 cursor-not-allowed' : 'bg-blue-600 text-white border-blue-700 hover:bg-blue-700'}`}
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+        >
+          Previous
+        </button>
+        <span className="text-base font-bold text-blue-400 bg-gray-900/60 px-4 py-2 rounded-lg border border-gray-700 shadow">
+          Page {page}
+        </span>
+        <button
+          className={`px-4 py-2 rounded-lg font-semibold border transition-all shadow ${pokemons.length < pageSize ? 'bg-gray-700 text-gray-400 border-gray-600 cursor-not-allowed' : 'bg-blue-600 text-white border-blue-700 hover:bg-blue-700'}`}
+          onClick={() => setPage((p) => p + 1)}
+          disabled={pokemons.length < pageSize}
+        >
+          Next
+        </button>
       </div>
       {selected && (
         <PokemonDetail
