@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 import PokemonCard from '../components/PokemonCard';
 import PokemonDetail from '../components/PokemonDetail';
-import { getPokemons, getAllPokemonNames } from '@/services/pokemon.service';
+import { getPokemons, getAllPokemonNames, getPokemonDetail } from '@/services/pokemon.service';
 
 interface Pokemon {
   name: string;
@@ -54,12 +54,11 @@ const Pokedex: React.FC = () => {
           const pageMatched = allMatched.slice((page - 1) * pageSize, page * pageSize);
           const results: Pokemon[] = await Promise.all(
             pageMatched.map(async (name) => {
-              const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-              const pokeData = await res.json();
+              const pokeData = await getPokemonDetail(name);
               return {
                 name: pokeData.name,
-                image: pokeData.sprites.other['official-artwork'].front_default,
-                types: pokeData.types.map((t: { type: { name: string } }) => t.type.name),
+                image: pokeData.image,
+                types: pokeData.types,
               };
             })
           );
