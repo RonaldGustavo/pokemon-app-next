@@ -8,7 +8,7 @@ A modern, responsive Pokédex web app built with Next.js, Tailwind CSS, and Type
 - 🌀 **Tailwind CSS** – Utility-first CSS framework for rapid UI development  
 - 🔐 **TypeScript** – Strongly-typed JavaScript for better maintainability  
 - 🌐 **Client-side Rendering (CSR)** – Ensures fast, SEO-friendly content  
-- 🎨 **3D Visuals** – Sleek, animated UI inspired by modern design systems  
+- 🎨 **Modern UI** – Sleek, modern design systems  
 - 📡 **PokéAPI** – Real-time Pokémon data fetched from the open PokéAPI  
 
 ## ✨ Features
