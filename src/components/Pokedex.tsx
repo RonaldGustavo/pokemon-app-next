@@ -15,6 +15,7 @@ interface Pokemon {
 
 const Pokedex: React.FC = () => {
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selected, setSelected] = useState<Pokemon | null>(null);
   const [page, setPage] = useState(1);
   const pageSize = 20;
@@ -36,13 +37,20 @@ const Pokedex: React.FC = () => {
   }, []);
 
   React.useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 400);
+    return () => clearTimeout(handler);
+  }, [search]);
+
+  React.useEffect(() => {
     let isMounted = true;
     async function fetchData() {
       setLoading(true);
       setError('');
       try {
-        if (search) {
-          const allMatched = allNames.filter((n) => n.toLowerCase().includes(search.toLowerCase()));
+        if (debouncedSearch) {
+          const allMatched = allNames.filter((n) => n.toLowerCase().includes(debouncedSearch.toLowerCase()));
           if (isMounted) setMatched(allMatched);
           const pageMatched = allMatched.slice((page - 1) * pageSize, page * pageSize);
           const results: Pokemon[] = await Promise.all(
@@ -63,7 +71,7 @@ const Pokedex: React.FC = () => {
           const data = await getPokemons(pageSize, offset);
           if (isMounted) setPokemons(data);
         }
-      } catch (err) {
+      } catch {
         if (isMounted) setError('Failed to load Pokémon data.');
       } finally {
         if (isMounted) setLoading(false);
@@ -71,7 +79,7 @@ const Pokedex: React.FC = () => {
     }
     fetchData();
     return () => { isMounted = false; };
-  }, [page, search, allNames]);
+  }, [page, debouncedSearch, allNames]);
 
   React.useEffect(() => { setPage(1); }, [search]);
 
