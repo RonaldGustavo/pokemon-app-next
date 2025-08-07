@@ -18,7 +18,7 @@ const Pokedex: React.FC = () => {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selected, setSelected] = useState<Pokemon | null>(null);
   const [page, setPage] = useState(1);
-  const pageSize = 20;
+  const pageSize = 10;
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const [matched, setMatched] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
