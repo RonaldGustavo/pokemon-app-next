@@ -16,7 +16,6 @@ const Pokedex: React.FC = () => {
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
-  const [matched, setMatched] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [allNames, setAllNames] = useState<string[]>([]);
@@ -46,7 +45,6 @@ const Pokedex: React.FC = () => {
       try {
         if (debouncedSearch) {
           const allMatched = allNames.filter((n) => n.toLowerCase().includes(debouncedSearch.toLowerCase()));
-          if (isMounted) setMatched(allMatched);
           const pageMatched = allMatched.slice((page - 1) * pageSize, page * pageSize);
           const results: Pokemon[] = await Promise.all(
             pageMatched.map(async (name) => {
@@ -60,7 +58,6 @@ const Pokedex: React.FC = () => {
           );
           if (isMounted) setPokemons(results);
         } else {
-          if (isMounted) setMatched([]);
           const offset = (page - 1) * pageSize;
           const data = await getPokemons(pageSize, offset);
           if (isMounted) setPokemons(data);
@@ -144,18 +141,12 @@ const Pokedex: React.FC = () => {
         </span>
         <button
           className={`px-4 py-2 rounded-lg font-semibold border transition-all shadow ${
-            (search
-              ? page * pageSize >= matched.length || pokemons.length === 0
-              : pokemons.length < pageSize || pokemons.length === 0)
+            (pokemons.length < pageSize || pokemons.length === 0)
               ? 'bg-gray-700 text-gray-400 border-gray-600 cursor-not-allowed'
               : 'bg-blue-600 text-white border-blue-700 hover:bg-blue-700'
           }`}
           onClick={() => setPage((p) => p + 1)}
-          disabled={
-            search
-              ? page * pageSize >= matched.length || pokemons.length === 0
-              : pokemons.length < pageSize || pokemons.length === 0
-          }
+          disabled={pokemons.length < pageSize || pokemons.length === 0}
         >
           Next
         </button>
