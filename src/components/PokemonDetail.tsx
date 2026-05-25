@@ -144,17 +144,18 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({
   }, [name]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur border-t border-b border-white/20"
         style={{ zIndex: 0 }}
+        onClick={onClose}
       />
       <div
-        className="relative bg-gray-800 rounded-2xl shadow-xl transform transition-transform duration-300 p-8 max-w-2xl w-full flex flex-row items-stretch animate-fadeInUp border border-gray-700 hover:border-blue-500 hover:shadow-blue-500/30 pointer-events-auto"
+        className="relative bg-gray-800 rounded-2xl shadow-xl transform transition-transform duration-300 p-4 sm:p-8 max-w-2xl w-full flex flex-col sm:flex-row items-stretch animate-fadeInUp border border-gray-700 hover:border-blue-500 hover:shadow-blue-500/30 pointer-events-auto max-h-[90vh] overflow-y-auto"
         style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.10)', zIndex: 1 }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex flex-col items-center justify-center min-w-[160px] pr-6 border-r border-gray-700 h-full">
+        <div className="flex flex-col items-center justify-center sm:min-w-[160px] pb-4 sm:pb-0 sm:pr-6 border-b sm:border-b-0 sm:border-r border-gray-700">
           <Image
             src={image}
             alt={name}
@@ -183,7 +184,7 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({
             </div>
           )}
         </div>
-        <div className="flex-1 flex flex-col justify-center pl-6">
+        <div className="flex-1 flex flex-col justify-center pt-4 sm:pt-0 sm:pl-6">
           <button
             className="absolute top-3 right-3 text-gray-400 hover:text-blue-600 text-2xl font-bold focus:outline-none"
             onClick={onClose}
